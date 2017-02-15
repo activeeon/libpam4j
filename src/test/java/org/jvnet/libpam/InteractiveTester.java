@@ -25,36 +25,34 @@ package org.jvnet.libpam;
 
 import junit.framework.TestCase;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 public class InteractiveTester extends TestCase {
     public InteractiveTester(String testName) {
         super(testName);
     }
 
+    /*
     public void testPositiveCase() throws Exception {
         for (int i=0; i<1000; i++)
             testOne();
     }
+    */
 
+    /*
     public void testOne() throws Exception {
-        UnixUser u = new PAM("sshd").authenticate(System.getProperty("user.name"), System.getProperty("password"));
+        UnixUser u = new PAM("passwd").authenticate(System.getProperty("user.name"), System.getProperty("password"));
         if(!printOnce) {
             System.out.println(u.getUID());
             System.out.println(u.getGroups());
             printOnce = true;
         }
     }
+    */
 
     public void testGetGroups() throws Exception {
-        System.out.println(new PAM("sshd").getGroupsOfUser(System.getProperty("user.name")));
+        System.out.println(new PAM("passwd").getGroupsOfUser(System.getProperty("user.name")));
     }
 
+    /*
     public void testConcurrent() throws Exception {
         ExecutorService es = Executors.newFixedThreadPool(10);
         Set<Future<?>> result = new HashSet<Future<?>>();
@@ -72,10 +70,11 @@ public class InteractiveTester extends TestCase {
         }
         es.shutdown();
     }
+    */
 
     public void testNegative() throws Exception {
         try {
-            new PAM("sshd").authenticate("bogus","bogus");
+            new PAM("passwd").authenticate("bogus","bogus");
             fail("expected a failure");
         } catch (PAMException e) {
             // yep
@@ -83,7 +82,7 @@ public class InteractiveTester extends TestCase {
     }
 
     public static void main(String[] args) throws Exception {
-        UnixUser u = new PAM("sshd").authenticate(args[0], args[1]);
+        UnixUser u = new PAM("passwd").authenticate(args[0], args[1]);
         System.out.println(u.getUID());
         System.out.println(u.getGroups());
         System.out.println(u.getGecos());
