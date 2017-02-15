@@ -11,8 +11,8 @@ buildscript {
     }
 }
 
-//group 'org.ow2.proactive'
-group 'org.kohsuke'
+group 'org.ow2.proactive'
+//group 'org.kohsuke'
 version projectVersion
 
 apply plugin: 'java'
