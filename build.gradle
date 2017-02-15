@@ -1,0 +1,63 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        maven {
+            url "http://repository.activeeon.com/content/groups/proactive/"
+        }
+    }
+}
+
+//group 'org.ow2.proactive'
+group 'org.kohsuke'
+version projectVersion
+
+apply plugin: 'java'
+apply plugin: 'maven'
+
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+}
+
+compileJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+repositories {
+    jcenter()
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            snapshotRepository(url: "http://repository.activeeon.com/content/repositories/snapshots/") {
+                authentication(userName: "${System.getProperty('nexusUsername')}",
+                        password: "${System.getProperty('nexusPassword')}")
+            }
+            repository(url: "http://repository.activeeon.com/content/repositories/releases/") {
+                authentication(userName: "${System.getProperty('nexusUsername')}",
+                        password: "${System.getProperty('nexusPassword')}")
+            }
+        }
+    }
+}
+
+defaultTasks 'clean', 'jar'
+
+dependencies {
+    compile 'net.java.dev.jna:jna:4.2.2'
+    testCompile 'junit:junit:4.12'
+}
+
+jar {
+    from {
+        configurations.compile
+                .findAll { !it.name.toLowerCase().contains("slf4j") }
+                .collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
